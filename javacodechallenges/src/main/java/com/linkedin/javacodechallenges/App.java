@@ -10,7 +10,9 @@ public class App {
     public static double calculateWaterBill(double gallonsUsage) {
         double bill = 18.84;
         if (gallonsUsage > CCF * 2) {
+            // Calculate num additional gallons
             double overage = gallonsUsage - CCF * 2;
+            // Calculate the number of additional CCFs
             long numAddlCCFs = (long) Math.ceil(overage / CCF);
             bill += (double) (numAddlCCFs * ADDL_CCF_CHG);
         }
