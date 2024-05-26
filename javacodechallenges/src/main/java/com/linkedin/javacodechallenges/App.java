@@ -4,9 +4,17 @@ import java.util.Scanner;
 
 public class App {
 
+    public static final double CCF = 748.0;
+    public static final double ADDL_CCF_CHG = 3.90;
+
     public static double calculateWaterBill(double gallonsUsage) {
-        // TODO: Implement method
-        return 0;
+        double bill = 18.84;
+        if (gallonsUsage > CCF * 2) {
+            double overage = gallonsUsage - CCF * 2;
+            long numAddlCCFs = (long) Math.ceil(overage / CCF);
+            bill += (double) (numAddlCCFs * ADDL_CCF_CHG);
+        }
+        return bill;
     }
 
     public static void main(String[] args) {
