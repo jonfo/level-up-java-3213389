@@ -1,13 +1,16 @@
 package com.linkedin.javacodechallenges;
 
-public class App 
-{
-    // Create function to calculate the date that's 
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
+
+public class App {
+    // Create function to calculate the date that's
     // 100 days from now
 
-    public static void main( String[] args )
-    {
-        System.out.println("100 days from now is... " 
-            /* add function call */);
+    public static void main(String[] args) {
+        System.out.println("100 days from now is... " +
+                LocalDate.now()
+                        .plusDays(100)
+                        .format(DateTimeFormatter.ISO_LOCAL_DATE));
     }
 }
