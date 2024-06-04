@@ -16,7 +16,23 @@ public class StoreItem {
   double discount;
 
   public static Optional<StoreItem> findLeastExpensive(Collection<StoreItem> items) {
-    // TODO: Implement
+
+    // List<StoreItem> list = values.stream().collect(Collectors.toList())
+
+    System.out.println("size = " + items.size());
+    StoreItem bestDeal = null;
+    double lowestPrice = 1000000;
+    items.forEach(list -> {
+      double discountedPrice = list.getRetailPrice() * (1.0 - list.getDiscount());
+      if (discountedPrice < lowestPrice) {
+        bestDeal = list;
+        lowestPrice = discountedPrice;
+      }
+      System.out.println("Discounted price for " + list.name + " = " + discountedPrice);
+    });
+    if (lowestPrice != 1000000)
+      return Optional.of(bestDeal);
+
     return Optional.empty();
   }
 
