@@ -1,6 +1,7 @@
 package com.linkedin.javacodechallenges;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 
 import lombok.AllArgsConstructor;
@@ -10,29 +11,31 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class StoreItem {
+
+public class StoreItem implements Comparable<StoreItem> {
   String name;
   double retailPrice;
   double discount;
 
+  @Override
+  public int compareTo(StoreItem item) {
+    double curHiPrice = this.retailPrice * (1.0 - this.discount);
+    double itemPrice = item.retailPrice * (1.0 - item.discount);
+    if (curHiPrice < itemPrice)
+      return -1;
+    else if (curHiPrice > itemPrice)
+      return 1;
+    return 0;
+  }
+
   public static Optional<StoreItem> findLeastExpensive(Collection<StoreItem> items) {
 
-    // List<StoreItem> list = values.stream().collect(Collectors.toList())
-
-    System.out.println("size = " + items.size());
-    StoreItem bestDeal = null;
-    double lowestPrice = 1000000;
-    items.forEach(list -> {
-      double discountedPrice = list.getRetailPrice() * (1.0 - list.getDiscount());
-      if (discountedPrice < lowestPrice) {
-        bestDeal = list;
-        lowestPrice = discountedPrice;
-      }
-      System.out.println("Discounted price for " + list.name + " = " + discountedPrice);
-    });
-    if (lowestPrice != 1000000)
+    if (items.size() == 0)
+      return Optional.empty();
+    StoreItem bestDeal = Collections.min(items);
+    if (bestDeal != null) {
       return Optional.of(bestDeal);
-
+    }
     return Optional.empty();
   }
 
