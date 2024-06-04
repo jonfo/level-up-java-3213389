@@ -19,15 +19,27 @@ public class App {
       Map.entry('W', 4), Map.entry('V', 4), Map.entry('X', 8), Map.entry('Y', 4),
       Map.entry('Z', 10));
 
+  public static boolean checkCharValid(Character c) {
+
+    Set<Character> validKeys = letterPoints.keySet();
+
+    if (!validKeys.contains(c)) {
+      System.out.println("Warning: invalid character in string: '" + c + "'");
+      return false;
+    }
+    return true;
+  }
+
   public static int wordScoreCalculator(String word) {
 
     // Create a set of valid keys.
-    Set<Character> validKeys = letterPoints.keySet();
+    // Set<Character> validKeys = letterPoints.keySet();
 
     // Split up word into a list of 1 char strings.
     // Also, upcase the alphabetic chars.
     List<Character> chars = word.toUpperCase().chars().mapToObj(e -> (char) e)
-        .filter(c -> validKeys.contains(c))
+        // .filter(c -> validKeys.contains(c))
+        .filter(c -> checkCharValid(c))
         .collect(Collectors.toList());
 
     return chars.stream().mapToInt(i -> letterPoints.get(i)).sum();
