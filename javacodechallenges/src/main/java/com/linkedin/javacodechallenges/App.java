@@ -10,6 +10,8 @@ import java.net.http.HttpClient;
 //import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Optional;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * Hello world!
@@ -19,16 +21,17 @@ public class App {
     private static final boolean SHOW_HEADERS = false;
     private static final boolean SHOW_STATUS_CODE = false;
     private static final boolean SHOW_JSON = true;
-    private static final HttpClient httpClient = HttpClient.newBuilder()
-            .version(HttpClient.Version.HTTP_1_1)
-            .build();
 
-    public static HttpResponse<String> getRequest() throws IOException, InterruptedException {
+    public static HttpResponse<String> sendRequest(String url) throws IOException, InterruptedException {
+
+        HttpClient httpClient = HttpClient.newBuilder()
+                .version(HttpClient.Version.HTTP_1_1)
+                .build();
+
         // This is only meaningful for icanhazdadjoke.com API.
         String returnFormat = App.SHOW_JSON ? "application/json" : "text/plain";
         HttpRequest request = HttpRequest.newBuilder()
-                // .uri(URI.create("https://postman-echo.com/get"))
-                .uri(URI.create("https://icanhazdadjoke.com/"))
+                .uri(URI.create(url))
                 .GET()
                 .setHeader("Accept", returnFormat)
                 .build();
@@ -38,26 +41,24 @@ public class App {
     }
 
     public static Optional<String> parseJoke(String responseBody) {
-        /*
-         * try {
-         * JokeResponse jokeResponse = new Gson().fromJson(responseBody,
-         * JokeResponse.class);
-         * String joke = jokeResponse.getJoke();
-         * if (joke != null) {
-         * return Optional.of(jokeResponse.getJoke());
-         * }
-         * return Optional.empty();
-         * } catch (Exception e) {
-         * System.out.println("Must be out of jokes for now.");
-         * return Optional.empty();
-         * }
-         */
-        return Optional.empty();
+
+        try {
+            JokeResponse jokeResponse = new Gson().fromJson(responseBody,
+                    JokeResponse.class);
+            String joke = jokeResponse.getJoke();
+            if (joke != null) {
+                return Optional.of(jokeResponse.getJoke());
+            }
+            return Optional.empty();
+        } catch (Exception e) {
+            System.out.println("Must be out of jokes for now.");
+            return Optional.empty();
+        }
     }
 
     public static void main(String[] args) {
         try {
-            HttpResponse<String> response = App.getRequest();
+            HttpResponse<String> response = App.sendRequest("https://icanhazdadjoke.com/");
             if (App.SHOW_HEADERS) {
                 // Print response headers
                 HttpHeaders headers = response.headers();
@@ -75,7 +76,8 @@ public class App {
             if (!App.SHOW_JSON) {
                 System.out.println(response.body());
             } else {
-                result = parseJoke(responseBody);
+                Optional<String> result = parseJoke(response.body());
+                result.ifPresent(System.out::println);
             }
         } catch (Exception e) {
             System.out.println("Exception occurred: " + e.toString());
