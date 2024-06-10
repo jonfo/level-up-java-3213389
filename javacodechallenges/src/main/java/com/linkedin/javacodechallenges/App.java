@@ -9,16 +9,16 @@ import java.io.IOException;
 import java.net.http.HttpClient;
 //import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Optional;
 
 /**
  * Hello world!
- *
  */
 public class App {
 
     private static final boolean SHOW_HEADERS = false;
     private static final boolean SHOW_STATUS_CODE = false;
-    private static final boolean SHOW_JSON = false;
+    private static final boolean SHOW_JSON = true;
     private static final HttpClient httpClient = HttpClient.newBuilder()
             .version(HttpClient.Version.HTTP_1_1)
             .build();
@@ -35,6 +35,24 @@ public class App {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         return response;
+    }
+
+    public static Optional<String> parseJoke(String responseBody) {
+        /*
+         * try {
+         * JokeResponse jokeResponse = new Gson().fromJson(responseBody,
+         * JokeResponse.class);
+         * String joke = jokeResponse.getJoke();
+         * if (joke != null) {
+         * return Optional.of(jokeResponse.getJoke());
+         * }
+         * return Optional.empty();
+         * } catch (Exception e) {
+         * System.out.println("Must be out of jokes for now.");
+         * return Optional.empty();
+         * }
+         */
+        return Optional.empty();
     }
 
     public static void main(String[] args) {
@@ -54,8 +72,11 @@ public class App {
             }
 
             // This is what we want to see.
-            System.out.println(response.body());
-
+            if (!App.SHOW_JSON) {
+                System.out.println(response.body());
+            } else {
+                result = parseJoke(responseBody);
+            }
         } catch (Exception e) {
             System.out.println("Exception occurred: " + e.toString());
         }
