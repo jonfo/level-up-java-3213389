@@ -3,8 +3,11 @@ package com.linkedin.javacodechallenges;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
-import java.util.Arrays;
+//import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 //import java.util.Optional;
@@ -34,6 +37,23 @@ public class App {
         return redactedText;
     }
 
+    /**
+     * 
+     * Maybe I should have stuck with a single string for the redactedText, but
+     * I can still make this work.
+     * 
+     * @param filename
+     * @param List<String> redactedText
+     */
+    public static void writeRedactedTextFile(String filename, List<String> redactedText)
+            throws IOException {
+        Path redactedFile = Paths.get("redacted_" + filename);
+        String s = redactedText.stream()
+                .map(e -> e.toString() + "\n")
+                .reduce("", String::concat);
+        Files.writeString(redactedFile, s);
+    }
+
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
@@ -51,6 +71,7 @@ public class App {
 
         try {
             List<String> result = redactTextFile(fileName, redactedWordsList);
+            writeRedactedTextFile(fileName, result);
             result.forEach(s -> System.out.println("output: " + s));
         } catch (FileNotFoundException e) {
             System.out.println(e.getMessage());

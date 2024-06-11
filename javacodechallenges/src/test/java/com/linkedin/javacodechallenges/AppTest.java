@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 //import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
-import java.io.FileNotFoundException;
+//import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,6 +33,7 @@ public class AppTest {
             String[] redactList = { "ivy", "oats" };
             List<String> redactedList = App.redactTextFile(testFile.toAbsolutePath().toString(), redactList);
             assertTrue(redactedList.size() == 0);
+            Files.delete(testFile);
         } catch (IOException e) {
             System.out.println(e.getMessage());
             assertTrue(false);
